@@ -30,11 +30,12 @@ class PerformanceMetricService:
             return {"status":True,"message":f"Performance metric created with id:{result.inserted_id}"}
         return {"status": False, "message":"Could not insert Performance metric"}
     
-    # function to calculate average downntime, total maintenance costs
+    # function to filter performance metrics by date
     async def get_performance_metrics_by_date(self,performance_stats:PerformanceStats)->list:
         performance_stats_data = performance_stats.model_dump()
         performance_stats_data["start_date"] = await self.get_ISO_date_string(performance_stats_data["start_date"])
         performance_stats_data["end_date"] = await self.get_ISO_date_string(performance_stats_data["end_date"])
+        # print(performance_stats_data["start_date"]," ",performance_stats_data["end_date"] )
         db = await connect_to_mongodb()
         docs = await db.performance_metrics.find({"asset_id":performance_stats_data["asset_id"],
                                                  "creation_date":{"$gte":performance_stats_data["start_date"],
@@ -43,3 +44,27 @@ class PerformanceMetricService:
             doc["_id"] = str(doc["_id"])
         await close_mongodb_connection(db)
         return docs
+    
+    # function to calculate average downntime, total maintenance costs
+    async def generate_performance_stats(self,performance_stats:PerformanceStats)->dict:
+        perf_data = await self.get_performance_metrics_by_date(performance_stats)
+        
+        if not perf_data:
+            return {"avg_downtime" : None,
+                    "avg_maint_cost" : None,
+                    "avg_failure_rate" : None
+                    }
+        num = len(perf_data)
+        total_downtime=0
+        total_maint_cost =0
+        total_failure_rate = 0
+        for perf in perf_data:
+            total_downtime += perf["downtime"]
+            total_maint_cost +=perf["maintenance_costs"]
+            total_failure_rate += perf["failure_rate"]
+        tempDict={
+        "avg_downtime" : total_downtime/num,
+        "avg_maint_cost" : total_maint_cost/num,
+        "avg_failure_rate" : total_failure_rate/num
+        }
+        return tempDict

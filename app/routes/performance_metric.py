@@ -24,7 +24,7 @@ async def create_performance_metric(performance_metric:PerformanceMetric,asset_i
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@router.post("/stats/")
+@router.post("/bydate/")
 async def get_performance_metrics_by_date(performance_stats:PerformanceStats,asset_id:Annotated[str,Depends(verify_asset)]):
     
     stats_list = await performance_metric_service.get_performance_metrics_by_date(performance_stats)
@@ -32,4 +32,9 @@ async def get_performance_metrics_by_date(performance_stats:PerformanceStats,ass
         raise HTTPException(status_code=404, detail="Metrics not found")
     return stats_list
 
-     
+@router.post("/generate_performance_stats/")
+async def generate_performance_stats(performance_stats:PerformanceStats,asset_id:Annotated[str,Depends(verify_asset)]):
+    stats_dict = await performance_metric_service.generate_performance_stats(performance_stats)
+    if stats_dict["avg_downtime"] is None:
+        raise HTTPException(status_code=404, detail="Metrics not found")
+    return stats_dict
