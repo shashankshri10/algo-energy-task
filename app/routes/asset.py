@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 from app.models.asset import Asset
+from app.models.start_end import StartEnd
 from app.services.asset_service import AssetService
 from ..dependencies import verify_token
 
@@ -57,4 +58,11 @@ async def get_assets_by_location(location: str,user_id:Annotated[str,Depends(ver
     assets = await asset_service.get_assets_by_location(location)
     if  len(assets)==0:
          raise HTTPException(status_code=404, detail="Assets not found")
+    return assets
+
+@router.post("/bydate/")
+async def get_assets_by_purchase_date(start_end:StartEnd,user_id:Annotated[str,Depends(verify_token)]):
+    assets = await asset_service.get_assets_by_purchase_date(start_end,user_id)
+    if len(assets)==0:
+        raise HTTPException(status_code=404, detail="Assets not found")
     return assets

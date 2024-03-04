@@ -34,7 +34,7 @@ async def login_user(username: str, password: str):
         print(authenticated)
         if authenticated["status"]:
             # If authentication is successful, return a success message and token
-            return {"message": "Login successful", "token": authenticated["token"]}
+            return {"message": "Login successful", "token": authenticated["token"],"user_id":authenticated["user_id"]}
         else:
             raise HTTPException(status_code=401, detail="Incorrect Password")
     except Exception as e:

@@ -45,7 +45,7 @@ class UserService:
         # Generate JWT token
         token = self.generate_jwt_token(str(user_data['_id']))
 
-        return {"status": True, "message": "Login successful", "token": token}
+        return {"status": True, "message": "Login successful", "token": token,"user_id":str(user_data["_id"])}
     
     async def find_user_by_username(self, username: str):
         database = await connect_to_mongodb()
