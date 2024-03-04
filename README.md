@@ -1,10 +1,10 @@
 # FastAPI Backend Setup Guide
 
-This guide will walk you through setting up a FastAPI backend, including creating a virtual environment, installing dependencies from a `requirements.txt` file, and setting up MongoDB. 
+This guide will walk you through setting up a FastAPI backend, including creating a virtual environment, installing dependencies from a `requirements.txt` file, setting up MongoDB, and testing the APIs.
 
 ## Setting Up Virtual Environment
 
-1. **Install Python**: Make sure Python is installed on your system. If not, download and install it from the official Python website.
+1. **Install Python**: Ensure Python is installed on your system. If not, download and install it from the official Python website.
 
 2. **Install `virtualenv` (if not already installed)**: If you're not using Python 3's built-in `venv` module, install `virtualenv` via pip:
 
@@ -75,19 +75,25 @@ This guide will walk you through setting up a FastAPI backend, including creatin
    uvicorn app.main:app --reload
    ```
 
+## Testing the APIs
+
+9. **Access API Documentation**:
+   - After running the development server with uvicorn, go to [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) in your browser.
+   - This page provides interactive documentation (Swagger UI) for your FastAPI backend, allowing you to explore and test your APIs directly from the browser.
+
 ## Loading a New Database
 
-9. **Load MongoDB Database**:
-   - Ensure MongoDB is running.
-   - Use `mongorestore` to load a dump into a new database:
+10. **Load MongoDB Database**:
+    - Ensure MongoDB is running.
+    - Use `mongorestore` to load a dump into a new database:
 
-   ```bash
-   mongorestore --db <new_database_name> <dump_directory>/<your_database_name>
-   ```
+    ```bash
+    mongorestore --db <new_database_name> <dump_directory>/<your_database_name>
+    ```
 
-   Replace `<new_database_name>` with the name of the new database and `<dump_directory>/<your_database_name>` with the path to the dump directory containing the dump files for your original database.
+    Replace `<new_database_name>` with the name of the new database and `<dump_directory>/<your_database_name>` with the path to the dump directory containing the dump files for your original database.
 
-10. **Example**:
+11. **Example**:
     Let's say you want to create a dump of a database named `mydatabase` and load it into a new database named `newdatabase`. Here are the commands:
 
     Creating a Dump:
@@ -102,4 +108,4 @@ This guide will walk you through setting up a FastAPI backend, including creatin
 
     Replace `/path/to/dump/directory` with the actual path where you want to store your dump files.
 
-That's it! You've successfully set up a FastAPI backend with MongoDB support.
+That's it! You've successfully set up a FastAPI backend with MongoDB support and tested your APIs using the interactive documentation provided by FastAPI.
